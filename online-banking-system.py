@@ -2,18 +2,87 @@ import sqlite3
 import time
 from functools import wraps
 import jwt
-print(jwt.__file__)  # Should show path containing 'pyjwt'
-print(jwt.__version__)  # Should be 2.x.x
 from datetime import datetime, timedelta, timezone
 import hashlib
 import secrets
+import os
 
 # Configuration
 SECRET_KEY = secrets.token_hex(32)  # Generate a random secret key
 TOKEN_EXPIRATION_MINUTES = 30
 
-# Middleware Decorators
+# Database Helper Functions
+def database_exists():
+    """Check if database file and tables exist"""
+    if not os.path.exists("bank.db"):
+        return False
+    
+    conn = sqlite3.connect("bank.db")
+    cursor = conn.cursor()
+    
+    try:
+        # Check if all required tables exist
+        tables = ['accounts', 'users', 'transactions']
+        for table in tables:
+            cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}'")
+            if not cursor.fetchone():
+                return False
+        return True
+    finally:
+        conn.close()
 
+def initialize_database():
+    """Initialize database only if it doesn't exist"""
+    if database_exists():
+        return
+        
+    conn = sqlite3.connect("bank.db")
+    cursor = conn.cursor()
+    
+    # Create tables with proper schema (using IF NOT EXISTS)
+    cursor.execute('''CREATE TABLE IF NOT EXISTS accounts (
+                    account_number TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    balance REAL)''')
+    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                    username TEXT PRIMARY KEY,
+                    account_number TEXT UNIQUE,
+                    password_hash TEXT NOT NULL,
+                    FOREIGN KEY(account_number) REFERENCES accounts(account_number))''')
+    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    account_number TEXT,
+                    type TEXT,
+                    amount REAL,
+                    related_account TEXT,
+                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(account_number) REFERENCES accounts(account_number))''')
+    
+    # Only add sample data if no users exist
+    cursor.execute("SELECT COUNT(*) FROM users")
+    if cursor.fetchone()[0] == 0:
+        cursor.execute("INSERT INTO accounts VALUES ('1234567890', 'Test User', 10000.00)")
+        cursor.execute("INSERT INTO users VALUES ('test', '1234567890', ?)", 
+                      (hashlib.sha256('test123'.encode()).hexdigest(),))
+    
+    conn.commit()
+    conn.close()
+
+def backup_database():
+    """Create timestamped backup of the database"""
+    if not os.path.exists("bank.db"):
+        return
+        
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_file = f"bank_backup_{timestamp}.db"
+    with open("bank.db", 'rb') as original:
+        with open(backup_file, 'wb') as backup:
+            backup.write(original.read())
+    print(f"Database backed up to {backup_file}")
+
+# Middleware Decorators
 def authenticate(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
@@ -49,40 +118,6 @@ def error_handler(func):
         except Exception as e:
             print(f"An error occurred: {e}")
     return wrapper
-
-# Database Setup
-def initialize_database():
-    conn = sqlite3.connect("bank.db")
-    cursor = conn.cursor()
-    
-    # Drop tables if they exist (for clean start)
-    cursor.execute("DROP TABLE IF EXISTS transactions")
-    cursor.execute("DROP TABLE IF EXISTS users")
-    cursor.execute("DROP TABLE IF EXISTS accounts")
-    
-    # Create tables with proper schema
-    cursor.execute('''CREATE TABLE accounts (
-                    account_number TEXT PRIMARY KEY,
-                    name TEXT NOT NULL,
-                    balance REAL)''')
-    
-    cursor.execute('''CREATE TABLE users (
-                    username TEXT PRIMARY KEY,
-                    account_number TEXT UNIQUE,
-                    password_hash TEXT NOT NULL,
-                    FOREIGN KEY(account_number) REFERENCES accounts(account_number))''')
-    
-    cursor.execute('''CREATE TABLE transactions (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    account_number TEXT,
-                    type TEXT,
-                    amount REAL,
-                    related_account TEXT,
-                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY(account_number) REFERENCES accounts(account_number))''')
-    
-    conn.commit()
-    conn.close()
 
 class Bank:
     def __init__(self):
@@ -375,6 +410,8 @@ def main_menu(bank):
 
 if __name__ == "__main__":
     initialize_database()
+    backup_database()  # Create initial backup
+    
     bank = Bank()
     try:
         while True:

@@ -287,7 +287,7 @@ with open('templates/base.html', 'w', encoding='utf-8') as f:
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">Simple Bank</a>
+            <a class="navbar-brand" href="/">Online Banking System</a>
             <div class="navbar-nav">
                 {% if 'username' in session %}
                     <span class="nav-item text-white me-3">Welcome, {{ session['username'] }}</span>
