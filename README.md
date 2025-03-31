@@ -78,6 +78,7 @@ For quick testing of the web interface, use these credentials:
 - Initial Balance: ₹10,000.00
 
 ## Project Structure
+```
 simple-bank-flask/
 ├── app.py                # Main Flask web application
 ├── Online-Banking-System.py  # Command-line interface
@@ -88,6 +89,7 @@ simple-bank-flask/
 │   ├── register.html     # Registration page
 │   └── dashboard.html    # Account dashboard
 └── README.md             # This file
+```
 
 ## API Endpoints
 
