@@ -48,26 +48,36 @@ The API implementation uses several middleware components:
 
 ### Web Application Setup
 1. Clone the repository:
+```
 git clone https://github.com/yourusername/Online-Banking-System.git
 cd Online-Banking-System
+```
 
 2. Create and activate a virtual environment (recommended):
+```
 python -m venv venv
 source venv/bin/activate  # On Windows use venv\Scripts\activate
+```
 
 3. Install dependencies:
+```
 pip install flask pyjwt
+```
 
 4. Initialize the database and run the application:
+```
 python app.py
+```
 
 5. Access the application at:
+```
 http://localhost:5000
-
+```
 ## CLI Interface
 The application also offers a command-line interface that can be used independently:
+```
 python Online-Banking-System.py
-
+```
 This interface provides access to all core banking features through a text menu.
 
 ## Default Test Account
@@ -92,7 +102,7 @@ simple-bank-flask/
 ```
 
 ## API Endpoints
-
+```
 | Endpoint   | Method   | Description                       |
 |------------|----------|-----------------------------------|
 | /          | GET      | Homepage (redirects to login/dashboard) |
@@ -103,12 +113,12 @@ simple-bank-flask/
 | /withdraw  | POST     | Withdraw funds                    |
 | /transfer  | POST     | Transfer funds                    |
 | /logout    | GET      | Logout user                       |
-
+```
 ## Custom Features
 
 ### Indian Currency Formatting
 The application includes a custom Jinja2 filter for Indian number formatting:
-
+```
 @app.template_filter('indian_format')
 def indian_number_format(value):
     # Formats numbers with Indian comma separators (e.g., 1,00,000 instead of 100,000)
@@ -124,10 +134,10 @@ def indian_number_format(value):
         else:
             formatted = last_three
         return formatted
-
+```
 ### Rate Limiting
 The CLI interface implements rate limiting to prevent abuse:
-
+```
 def rate_limiter(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
@@ -143,7 +153,7 @@ def rate_limiter(func):
         rate_limit_cache[account_number] = current_time
         return func(self, *args, **kwargs)
     return wrapper
-
+```
 ## Security Considerations
 - Passwords are hashed using SHA-256
 - Session management with secret key
