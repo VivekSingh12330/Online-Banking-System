@@ -1,0 +1,19 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore SQLite binaries
+sqlite3
+sqlite3_analyzer
+sqlite3_rsync
+sqldiff
+
+# Ignore virtual environment (if any)
+venv/
+.env
+
+# Ignore system files
+.DS_Store
+Thumbs.db

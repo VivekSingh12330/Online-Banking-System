@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Account Summary</h4>
+            </div>
+            <div class="card-body">
+                <h5>Welcome, {{ account['name'] }}!</h5>
+                <p>Account Number: {{ account['account_number'] }}</p>
+                <p class="fs-3">Balance: Rupees {{ account['balance'] | indian_format }}</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Recent Transactions</h4>
+            </div>
+            <div class="card-body">
+                {% if transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Amount (Rupees)</th>
+                                    <th>Related Account</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in transactions %}
+                                    <tr>
+                                        <td>{{ t['timestamp'] }}</td>
+                                        <td>{{ t['type'] }}</td>
+                                        <td>{{ t['amount'] | indian_format }}</td>
+                                        <td>{{ t['related_account'] or '-' }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center">No transactions yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Quick Actions</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('deposit') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Deposit Money (Rupees)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" name="amount" min="0.01" step="0.01" placeholder="Amount" required>
+                            <button type="submit" class="btn btn-success">Deposit</button>
+                        </div>
+                    </div>
+                </form>
+
+                <form method="POST" action="{{ url_for('withdraw') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Withdraw Money (Rupees)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" name="amount" min="0.01" step="0.01" placeholder="Amount" required>
+                            <button type="submit" class="btn btn-warning">Withdraw</button>
+                        </div>
+                    </div>
+                </form>
+
+                <form method="POST" action="{{ url_for('transfer') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Transfer Money (Rupees)</label>
+                        <input type="text" class="form-control mb-2" name="to_account" placeholder="Recipient Account #" required>
+                        <div class="input-group">
+                            <input type="number" class="form-control" name="amount" min="0.01" step="0.01" placeholder="Amount" required>
+                            <button type="submit" class="btn btn-primary">Transfer</button>
+                        </div>
+                    </div>
+                </form>
+
+                <a href="{{ url_for('logout') }}" class="btn btn-danger w-100 mt-3">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
