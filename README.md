@@ -199,23 +199,3 @@ def rate_limiter(func):
 
 ### 12. Logout Successfully
 ![Logout Successfully](screenshots/12_logout_successfully.png)
-
-```
-python Copy
-def rate_limiter(func):
-    @wraps(func)
-    def wrapper(self, *args, **kwargs):
-        if not hasattr(self, 'current_user'):
-            account_number = "anonymous"
-        else:
-            account_number = self.current_user['account_number']
-            
-        current_time = time.time()
-        if account_number in rate_limit_cache and current_time - rate_limit_cache[account_number] < 2:
-            print("Too many requests. Please wait.")
-            return
-        rate_limit_cache[account_number] = current_time
-        return func(self, *args, **kwargs)
-    return wrapper
-```
-Security Considerations
