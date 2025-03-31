@@ -200,7 +200,7 @@ def rate_limiter(func):
 ### 12. Logout Successfully
 ![Logout Successfully](screenshots/12_logout_successfully.png)
 
-
+```
 python Copy
 def rate_limiter(func):
     @wraps(func)
@@ -217,4 +217,5 @@ def rate_limiter(func):
         rate_limit_cache[account_number] = current_time
         return func(self, *args, **kwargs)
     return wrapper
+```
 Security Considerations
