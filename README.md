@@ -156,7 +156,7 @@ def rate_limiter(func):
 ![Registration](screenshots/1_Registration.png)
 
 ### 2. Registration Successfully
-![Registration Successfully](screenshots/2_Registration successfully.png)
+![Registration Successfully](screenshots/2_Registration_successfully.png)
 
 ### 3. Login
 ![Login](screenshots/3_Login.png)
@@ -168,22 +168,22 @@ def rate_limiter(func):
 ![Deposit Action](screenshots/5_Deposit_action.png)
 
 ### 6. Deposit Action Successfully
-![Deposit Action Successfully](screenshots/6_Deposit_action Successfully.png)
+![Deposit Action Successfully](screenshots/6_Deposit_action_Successfully.png)
 
 ### 7. Withdraw Action
 ![Withdraw Action](screenshots/7_withdraw_action.png)
 
 ### 8. Withdraw Action Successfully
-![Withdraw Action Successfully](screenshots/8_withdraw_action Successfully.png)
+![Withdraw Action Successfully](screenshots/8_withdraw_action_Successfully.png)
 
 ### 9. Transfer Action
 ![Transfer Action](screenshots/9_transfer_action.png)
 
 ### 10. Transfer Action Successfully
-![Transfer Action Successfully](screenshots/10_transfer_action successfully.png)
+![Transfer Action Successfully](screenshots/10_transfer_action_successfully.png)
 
 ### 11. Receiver Account
 ![Receiver Account](screenshots/11_receiver_account.png)
 
 ### 12. Logout Successfully
-![Logout Successfully](screenshots/12_logout successfully.png)
+![Logout Successfully](screenshots/12_logout_successfully.png)
