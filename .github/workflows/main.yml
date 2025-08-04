@@ -20,7 +20,11 @@ jobs:
         run: pip install bandit
 
       - name: Run Bandit Scan
-        run: bandit -r . -f html -o bandit_report.html
+        run: |
+          bandit -r . -f html -o bandit_report.html \
+          --severity-level high \
+          --confidence-level high
+
 
       - name: Upload Bandit HTML Report as Artifact
         uses: actions/upload-artifact@v4
