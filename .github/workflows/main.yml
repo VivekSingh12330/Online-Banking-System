@@ -23,7 +23,7 @@ jobs:
         run: bandit -r . -f html -o bandit_report.html
 
       - name: Upload Bandit HTML Report as Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Bandit-SAST-Report
           path: bandit_report.html
